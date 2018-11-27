@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript">	
+		
+		$(document).ready(function () {
+		
+			$.getJSON('../visualizacao/cadastro.json', function (data) {
+
+				var items = [];
+				var options = '<option value="">Aluno ou Professor?</option>';	
+
+				$.each(data, function (key, val) {
+					options += '<option value="' + val.nome + '">' + val.nome + '</option>';
+				});					
+				$("#tipo").html(options);				
+				
+				$("#tipo").change(function () {				
+				
+					var options_cidades = '';
+					var str = "";					
+					
+					$("#tipo option:selected").each(function () {
+						str += $(this).text();
+					});
+					
+					$.each(data, function (key, val) {
+						if(val.nome == str) {							
+							$.each(val.cidades, function (key_city, val_city) {
+								options_cidades += '<option value="' + val_city + '">' + val_city + '</option>';
+							});							
+						}
+					});
+
+					$("#atributos").html(options_cidades);
+					
+				}).change();		
+			
+			});
+		
+		});
+		
+	</script>	
+
+
+
+
+	<script type="text/javascript">
+function validaForm(frm) {
+
+    if(frm.nome.value == "" || frm.nome.value == null || frm.nome.value.lenght < 3) {
+        alert("Por favor, indique o seu nome.");
+        frm.nome.focus();
+        return false;
+    }
+    if(frm.senha.value == "" || frm.senha.value == null || frm.senha.value.lenght < 3) {
+        alert("Por favor, indique a sua senha.");
+        frm.senha.focus();
+        return false;
+    }
+
+
+    if(frm.email.value.indexOf("@") == -1 ||
+      frm.email.valueOf.indexOf(".") == -1 ||
+      frm.email.value == "" ||
+      frm.email.value == null) {
+        alert("Por favor, indique um e-mail válido.");
+        frm.email.focus();
+        return false;
+    }
+
+    if(frm.data_nasc.value == "" || frm.data_nasc.value == null) {
+        alert("Por favor, indique a sua data de nascimento.");
+        frm.data_nasc.focus();
+        return false;
+    }
+
+    if(frm.atributo.value == "" || frm.atributo.value == null) {
+        alert("Por favor, indique se você é professor ou aluno.");
+        frm.atributo.focus();
+        return false;
+    }
+}
+
+</script>	
+
+
+</head>
+
+<body>
+<?php include'menu.php' ?>
+
+<div class="ui grid" >
+  <div class="four wide column"></div>
+  <div class="eight wide column">
+
+    <form class="ui equal width aligned segment form" method="post" action="../controlador/Usuarios.php?acao=cadastrar" enctype='multipart/form-data' onsubmit="return validaForm(this);">
+   <div class="field">
+    <label>Nome</label>
+    <input type="text" name="nome">
+  </div>
+  <div class="field">
+    <label>Senha</label>
+    <input type="password" name="senha">
+  </div>
+   <div class="field">
+    <label>Email</label>
+    <input type="email" name="email">
+  </div>
+   <div class="field">
+    <label>Data de nascimento</label>
+    <input type="date" name="data_nasc">
+  </div>  
+
+  <div class="field">
+    <label>Você é...</label>
+    <select class="ui dropdown" id="tipo" name="cod_tip">
+			<option value=""></option>
+		</select>
+		<div class="field"></div>
+		 <label>de</label>
+		<select name="atributo" id="atributos">
+		</select>
+  </div>
+     <div class="field">
+    <label>Foto</label>
+    <input type="file" name="foto_perf">
+  </div>
+  <div class="field">
+  </div>
+   <button class="ui button" type="submit" value="gravar" name="gravar" id="gravar">Cadastrar</button>
+</form>
+
+  </div>
+  <div class="four wide column"></div>
+  </div>
+
+>
+
+
+
+</body>
+
+</html>
